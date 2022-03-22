@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import {RouteProp} from '@react-navigation/core';
-import {StackNavigationProp} from '@react-navigation/native-stack';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
 
 type ScreenNavigationProp<T extends keyof RootStackParamList> =
-  StackNavigationProp<RootStackParamList, T>;
+  NativeStackNavigationProp<RootStackParamList, T>;
 
 type ScreenRouteProp<T extends keyof RootStackParamList> = RouteProp<
   RootStackParamList,
@@ -18,7 +18,7 @@ type Props<T extends keyof RootStackParamList> = {
 
 const Splash: React.FC<Props<'Splash'>> = ({navigation}) => {
   setTimeout(() => {
-    navigation.replace('Home');
+    navigation.replace('Checkout');
   }, 3000);
   return (
     <>
