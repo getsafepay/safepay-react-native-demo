@@ -1,50 +1,63 @@
 import React, {useState, useEffect} from 'react';
-import {Modal, Alert, Button, View, Text, StyleSheet} from 'react-native';
+import {
+  Modal,
+  Alert,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import queryString from 'query-string';
 import WebView from 'react-native-webview';
+import {SafepayCheckoutProps} from '../types/checkout';
+import environment from '../enums/checkoutURL';
 
-const baseURL =
-  process.env.ENVIRONMENT === 'PRODUCTION'
-    ? 'https://api.getsafepay.com/components'
-    : 'https://sandbox.api.getsafepay.com/components';
+const PRODUCTION_BASEURL = 'https://api.getsafepay.com/';
+const SANDBOX_BASEURL = 'https://sandbox.api.getsafepay.com/';
+const components = 'components';
 
-const Checkout: React.FC = () => {
+const SafepayCheckout: React.FC<SafepayCheckoutProps> = (
+  props: SafepayCheckoutProps,
+) => {
+  const baseURL =
+    props.environment === environment.PRODUCTION
+      ? `${PRODUCTION_BASEURL}${components}`
+      : `${SANDBOX_BASEURL}${components}`;
+
   const [modalVisible, setModalVisible] = useState(false);
   const [Token, setToken] = useState('');
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const response = await fetch(
-          'https://sandbox.api.getsafepay.com/order/v1/init',
-          {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              client: 'sec_1d7a51e2-85b6-46fb-bbaf-8e2b612bf73b',
-              amount: 455,
-              currency: 'PKR',
-              environment: 'sandbox',
-            }),
+        const response = await fetch(`${SANDBOX_BASEURL}order/v1/init`, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
           },
-        );
+          body: JSON.stringify({
+            client: props.clientKey,
+            amount: props.amount,
+            currency: props.currency,
+            environment: props.environment,
+          }),
+        });
         const json = await response.json();
         setToken(json.data.token);
       } catch (error) {
         console.error(error);
       }
     };
-
-    fetchToken();
-  }, []);
+    if (modalVisible) {
+      fetchToken();
+    }
+  }, [modalVisible, props]);
 
   const params = {
     beacon: `${Token}`,
-    order_id: '12345',
+    order_id: props.order_id,
     source: 'mobile',
-    env: 'sandbox',
+    env: props.environment,
   };
 
   const qs = queryString.stringify(params);
@@ -55,10 +68,13 @@ const Checkout: React.FC = () => {
     <>
       <View style={styles.view}>
         <Text style={styles.text}>Checkout page SafePay</Text>
-        <Button
-          title="Checkout"
-          onPress={() => setModalVisible(!modalVisible)}
-        />
+        <TouchableOpacity
+          style={(styles.button, props.buttonStyle)}
+          onPress={() => setModalVisible(!modalVisible)}>
+          <Text style={(styles.btn_text, props.buttonTextStyle)}>
+            {props.buttonTitle}
+          </Text>
+        </TouchableOpacity>
       </View>
       <Modal
         animationType="slide"
@@ -82,6 +98,7 @@ const Checkout: React.FC = () => {
               setTimeout(() => {
                 Alert.alert('Payment Cancelled!');
                 setModalVisible(!modalVisible);
+                setToken('');
               }, 3000);
             }
             if (parsed.action === 'complete') {
@@ -96,7 +113,7 @@ const Checkout: React.FC = () => {
     </>
   );
 };
-export default Checkout;
+export default SafepayCheckout;
 
 const styles = StyleSheet.create({
   view: {
@@ -112,17 +129,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
   },
-  icons_checkout: {
-    color: 'white',
+  btn_text: {
+    color: 'black',
   },
-  checkout: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    marginTop: '100%',
-    marginBottom: '0%',
-    padding: '3%',
-    width: '50%',
-    fontSize: 18,
-    justifyContent: 'space-evenly',
+  button: {
+    alignItems: 'center',
+    backgroundColor: 'lightblue',
+    padding: 10,
   },
 });
