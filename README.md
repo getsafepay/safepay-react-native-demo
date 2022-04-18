@@ -1,31 +1,28 @@
-# Safepay React Native Checkout
+## Safepay React Native Demo
 
 This project aims to be the easiest way for our merchants to consume safepay-checkout in their React Native applications.
 
-## Installation
+### Installation
 
-npm:
->npm install safepay-react-native
+`npm:`
 
-yarn:
->yarn add safepay-react-native
+> #### $ npm install
 
-### 1. Add react-native-webview to your dependencies
+`ios:`
 
-> $ npm install --save react-native-webview
+> #### $ pod install
 
-### `Android:`
+#### `npm start`
 
-Android - `react-native-webview` version <6: This module does not require any extra step after running the link command.
+Runs your app in development mode.
 
-Android - `react-native-webview` version >=6.X.X: Please make sure AndroidX is enabled in your project by editting `android/gradle.properties` and adding 2 lines:
+#### `npm run ios`
 
-For Android manual installation, please refer to this [article](https://engineering.brigad.co/demystifying-react-native-modules-linking-964399ec731b) where you can find detailed step on how to link any react-native project.
+Like npm start, but also attempts to open your app in the iOS Simulator if you're on a Mac and have it installed.
 
-### `iOS:`
+#### `npm run android`
 
-If using CocoaPods, in the ios/ or macos/ directory run:
-> $ pod install
+Like npm start, but also attempts to open your app on a connected Android device or emulator. Requires an installation of Android build tools (see [React Native](https://reactnative.dev/docs/getting-started) docs for detailed setup).  
 
 #### Usage
 
