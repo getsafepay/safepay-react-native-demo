@@ -1,4 +1,4 @@
-## Safepay React Native Demo
+### Safepay React Native Demo
 
 This project aims to be the easiest way for our merchants to consume safepay-checkout in their React Native applications.
 
