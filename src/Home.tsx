@@ -1,6 +1,6 @@
 import React from 'react';
 import {Alert, StyleSheet} from 'react-native';
-import SafepayCheckout, {environment, theme} from 'safepay-react-native-sdk';
+import SafepayCheckout, {environment, theme} from '@sfpy/react-native-sdk';
 
 const Home: React.FC = () => {
   return (
